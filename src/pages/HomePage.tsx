@@ -2,41 +2,28 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-interface ApiTask {
+interface Task {
   id: number;
   title: string;
   completed: boolean;
   userId: number;
 }
 
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-  userName: string;
-}
-
 const HomePage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filter, setFilter] = useState<"all" | "completed" | "incomplete">("all");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get<ApiTask[]>(
-          "https://jsonplaceholder.typicode.com/todos?_limit=0"
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/todos"
         );
-        const tasksWithUsers = response.data.map((task) => ({
-          ...task,
-          userName: `User ${task.userId}`,
-        }));
-        setTasks(tasksWithUsers);
-        setLoading(false);
+        setTasks(response.data);
       } catch (err) {
-        console.error("Error fetching tasks:", err);
-        setError("Failed to fetch tasks");
+        console.error("Failed to fetch tasks", err);
+      } finally {
         setLoading(false);
       }
     };
@@ -56,17 +43,12 @@ const HomePage = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
-  const addTask = (title: string, userName: string) => {
-    if (!title.trim() || !userName.trim()) {
-      alert("Please enter a task title and your name.");
-      return;
-    }
-
+  const addTask = (title: string) => {
     const newTask: Task = {
       id: Date.now(),
       title,
       completed: false,
-      userName,
+      userId: 1, 
     };
     setTasks((prevTasks) => [newTask, ...prevTasks]);
   };
@@ -78,16 +60,15 @@ const HomePage = () => {
   });
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div className="max-w-md mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">To-Do App</h1>
 
       <AddTaskForm onAdd={addTask} />
 
-      <div className="mb-4">
-        <label className="mr-2">Filter:</label>
+      <div className="my-4">
+        <label className="mr-2 font-medium">Filter:</label>
         <select
           value={filter}
           onChange={(e) =>
@@ -107,8 +88,8 @@ const HomePage = () => {
             <Link to={`/task/${task.id}`} className="text-lg font-medium">
               {task.title}
             </Link>
-            <p>Status: {task.completed ? "Completed" : "Incomplete"}</p>
-            <p className="mb-6">User: {task.userName}</p>
+            <p>Status: {task.completed ? "Completed ✅" : "Incomplete ❌"}</p>
+            <p>User ID: {task.userId}</p>
             <button
               onClick={() => toggleTaskStatus(task.id)}
               className="px-4 py-2 bg-blue-500 text-white rounded-full mr-2"
@@ -128,41 +109,27 @@ const HomePage = () => {
   );
 };
 
-interface AddTaskFormProps {
-  onAdd: (title: string, userName: string) => void;
-}
-
-const AddTaskForm = ({ onAdd }: AddTaskFormProps) => {
+const AddTaskForm = ({ onAdd }: { onAdd: (title: string) => void }) => {
   const [title, setTitle] = useState("");
-  const [userName, setUserName] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAdd(title, userName);
-    setTitle(""); 
-    setUserName(""); 
+    if (title.trim()) {
+      onAdd(title);
+      setTitle("");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="mb-4">
       <input
         type="text"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        placeholder="Enter your name"
-        className="w-96 p-2 border rounded-lg mb-4"
-        required
-      />
-      <input
-        type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Add a new task"
-        className="w-full p-6 border rounded-lg mb-4"
-        required
+        className="w-full p-2 border rounded-lg"
       />
-      
-      <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-full">
+      <button type="submit" className="mt-2 px-4 py-2 bg-green-500 text-white rounded-full">
         Add Task
       </button>
     </form>

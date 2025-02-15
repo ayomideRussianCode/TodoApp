@@ -17,22 +17,25 @@ const TaskDetailsPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        const response = await axios.get(
-          `https://jsonplaceholder.typicode.com/todos/${id}`
-        );
-        setTask(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching task details:", err); 
+  const fetchTask = async () => {
+    try {
+      const response = await axios.get(
+        `https://jsonplaceholder.typicode.com/todos/${id}`
+      );
+      setTask(response.data);
+      setLoading(false);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setError(error.message);
+      } else {
         setError("Failed to fetch task details");
-        setLoading(false);
       }
-    };
+      setLoading(false);
+    }
+  };
 
-    fetchTask();
-  }, [id]);
+  fetchTask();
+}, [id]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -46,8 +49,8 @@ const TaskDetailsPage = () => {
       <p>Status: {task.completed ? "Completed" : "Incomplete"}</p>
       <p>User ID: {task.userId}</p>
       <button
-        onClick={() => navigate("/")}
-        className="mt-4 px-4 py-2 bg-gray-500 text-white rounded"
+        onClick={() => navigate("/home")}
+        className="mt-4 px-4 py-2 bg-green-500 text-white rounded-full"
       >
         Back
       </button>
