@@ -1,6 +1,6 @@
 # To-Do App with React, TailwindCSS, and TypeScript
 
-I created  a simple, responsive, and interactive app that helps you manage your tasks. It’s built with React-vite, TailwindCSS, and TypeScript, and it includes features like adding, deleting, and marking tasks as complete. Plus, it has a dark mode toggle
+I created  a simple, responsive, and interactive app that helps you manage your tasks. It’s built with React-vite, TailwindCSS, and TypeScript, and it includes features like adding, deleting, and marking tasks as complete. Plus, it has a dark mode toggle.
 
 
 # Features
