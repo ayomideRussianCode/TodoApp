@@ -13,7 +13,7 @@ const TodoDetails: React.FC<TodoDetailsProps> = ({ todo, onBack }) => {
       <p>Task ID: {todo.id}</p>
       <p>Status: {todo.completed ? 'Completed' : 'Incomplete'}</p>
       <p>User ID: {todo.userId}</p>
-      <button onClick={onBack} className="mt-4 px-4 py-2 bg-gray-500 text-white rounded">
+      <button onClick={onBack} className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-full">
         Back
       </button>
     </div>

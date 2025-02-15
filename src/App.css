@@ -1,2 +1,20 @@
-@import "tailwindcss";
-
+:root {
+    --bg-color: #f9fafb;
+    --text-color: #111827;
+    --button-bg: #e5e7eb;
+    --button-hover: #d1d5db;
+  }
+  
+  .dark-mode {
+    --bg-color: #111827;
+    --text-color: #f9fafb;
+    --button-bg: #374151;
+    --button-hover: #4b5563;
+  }
+  
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  

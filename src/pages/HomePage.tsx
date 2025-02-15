@@ -6,7 +6,7 @@ interface Task {
   id: number;
   title: string;
   completed: boolean;
-  userId: number;
+  userName: string; 
 }
 
 const HomePage = () => {
@@ -19,11 +19,16 @@ const HomePage = () => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(
-          "https://jsonplaceholder.typicode.com/todos"
+          "https://jsonplaceholder.typicode.com/todos?_limit=0" 
         );
-        setTasks(response.data);
+        const tasksWithUsers = response.data.map((task: any) => ({
+          ...task,
+          userName: `User ${task.userId}`, 
+        }));
+        setTasks(tasksWithUsers);
         setLoading(false);
       } catch (err) {
+        console.error("Error fetching tasks:", err); 
         setError("Failed to fetch tasks");
         setLoading(false);
       }
@@ -44,12 +49,17 @@ const HomePage = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
-  const addTask = (title: string) => {
+  const addTask = (title: string, userName: string) => {
+    if (!title.trim() || !userName.trim()) {
+      alert("Please enter a task title and your name."); 
+      return;
+    }
+
     const newTask: Task = {
-      id: Date.now(),
+      id: Date.now(), 
       title,
       completed: false,
-      userId: 1, // Mock user ID
+      userName, 
     };
     setTasks((prevTasks) => [newTask, ...prevTasks]);
   };
@@ -66,6 +76,9 @@ const HomePage = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">To-Do App</h1>
+
+      <AddTaskForm onAdd={addTask} />
+
       <div className="mb-4">
         <label className="mr-2">Filter:</label>
         <select
@@ -80,6 +93,7 @@ const HomePage = () => {
           <option value="incomplete">Incomplete</option>
         </select>
       </div>
+
       <ul>
         {filteredTasks.map((task) => (
           <li key={task.id} className="mb-4 p-4 border rounded-lg shadow-sm">
@@ -87,7 +101,7 @@ const HomePage = () => {
               {task.title}
             </Link>
             <p>Status: {task.completed ? "Completed" : "Incomplete"}</p>
-            <p>User ID: {task.userId}</p>
+            <p>User: {task.userName}</p> 
             <button
               onClick={() => toggleTaskStatus(task.id)}
               className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
@@ -103,32 +117,42 @@ const HomePage = () => {
           </li>
         ))}
       </ul>
-      <AddTaskForm onAdd={addTask} />
     </div>
   );
 };
 
-const AddTaskForm = ({ onAdd }: { onAdd: (title: string) => void }) => {
+interface AddTaskFormProps {
+  onAdd: (title: string, userName: string) => void;
+}
+
+const AddTaskForm = ({ onAdd }: AddTaskFormProps) => {
   const [title, setTitle] = useState("");
+  const [userName, setUserName] = useState(""); 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title.trim()) {
-      onAdd(title);
-      setTitle("");
-    }
+    onAdd(title, userName); 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4">
+    <form onSubmit={handleSubmit} className="mb-4">
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Add a new task"
-        className="w-full p-2 border rounded"
+        className="w-full p-2 border rounded mb-2"
+        required 
       />
-      <button type="submit" className="mt-2 px-4 py-2 bg-green-500 text-white rounded">
+      <input
+        type="text"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+        placeholder="Enter your name"
+        className="w-full p-2 border rounded mb-2"
+        required 
+      />
+      <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
         Add Task
       </button>
     </form>

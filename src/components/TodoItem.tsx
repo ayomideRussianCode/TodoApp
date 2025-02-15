@@ -17,13 +17,13 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {
       <div className="flex space-x-2">
         <button
           onClick={() => onToggle(todo.id)}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className="px-4 py-2 bg-blue-500 text-white rounded-full"
         >
           {todo.completed ? 'Undo' : 'Complete'}
         </button>
         <button
           onClick={() => onDelete(todo.id)}
-          className="px-4 py-2 bg-red-500 text-white rounded"
+          className="px-4 py-2 bg-red-500 text-white rounded-full"
         >
           Delete
         </button>
