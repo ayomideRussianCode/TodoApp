@@ -11,7 +11,9 @@ interface Task {
 
 const HomePage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [filter, setFilter] = useState<"all" | "completed" | "incomplete">("all");
+  const [filter, setFilter] = useState<"all" | "completed" | "incomplete">(
+    "all"
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const HomePage = () => {
       id: Date.now(),
       title,
       completed: false,
-      userId: 1, 
+      userId: 1,
     };
     setTasks((prevTasks) => [newTask, ...prevTasks]);
   };
@@ -129,7 +131,10 @@ const AddTaskForm = ({ onAdd }: { onAdd: (title: string) => void }) => {
         placeholder="Add a new task"
         className="w-full p-2 border rounded-lg"
       />
-      <button type="submit" className="mt-2 px-4 py-2 bg-green-500 text-white rounded-full">
+      <button
+        type="submit"
+        className="mt-2 px-4 py-2 bg-green-500 text-white rounded-full"
+      >
         Add Task
       </button>
     </form>

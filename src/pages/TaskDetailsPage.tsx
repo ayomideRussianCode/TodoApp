@@ -17,25 +17,25 @@ const TaskDetailsPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-  const fetchTask = async () => {
-    try {
-      const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/todos/${id}`
-      );
-      setTask(response.data);
-      setLoading(false);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setError(error.message);
-      } else {
-        setError("Failed to fetch task details");
+    const fetchTask = async () => {
+      try {
+        const response = await axios.get(
+          `https://jsonplaceholder.typicode.com/todos/${id}`
+        );
+        setTask(response.data);
+        setLoading(false);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setError(error.message);
+        } else {
+          setError("Failed to fetch task details");
+        }
+        setLoading(false);
       }
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchTask();
-}, [id]);
+    fetchTask();
+  }, [id]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
