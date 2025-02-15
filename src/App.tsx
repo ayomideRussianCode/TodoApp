@@ -48,7 +48,7 @@ const App = () => {
         <Router>
           <main className="py-6">
             <Routes>
-              <Route path="/home" element={<HomePage />} />
+              <Route path="/" element={<HomePage />} />
               <Route path="/task/:id" element={<TaskDetailsPage />} />
             </Routes>
           </main>

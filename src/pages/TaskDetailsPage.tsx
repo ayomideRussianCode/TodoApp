@@ -49,7 +49,7 @@ const TaskDetailsPage = () => {
       <p>Status: {task.completed ? "Completed" : "Incomplete"}</p>
       <p>User ID: {task.userId}</p>
       <button
-        onClick={() => navigate("/home")}
+        onClick={() => navigate("/")}
         className="mt-4 px-4 py-2 bg-green-500 text-white rounded-full"
       >
         Back
